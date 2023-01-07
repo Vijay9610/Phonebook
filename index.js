@@ -63,8 +63,20 @@ app.post('/api/persons', (request, response) => {
     const body = request.body
 
     if(!body.name || !body.number){
-        return response.status(204).end('Either name or number missing in contact details')
+        return response.status(400).json({error: 'Either name or number missing in contact details'})
     }
+
+    isExist = false
+    persons.forEach(person => {
+        if(person.name === body.name){
+            isExist = true
+        }
+    })
+
+    if(isExist){
+        return response.status(400).json({error: 'Name must be unique'})
+    }
+
     const contact = {
         name: body.name,
         number: body.number,
