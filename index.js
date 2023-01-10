@@ -5,7 +5,17 @@ const app = express()
 app.use(express.json())
 
 const morgan = require('morgan')
-app.use(morgan('tiny'))
+morgan.token('post-data', (request, response) => {
+    if(request.method === 'POST'){
+        const data = request.body
+        return JSON.stringify(data)
+    }
+    else{
+        return ''
+    }
+})
+
+app.use(morgan(':method :url :status :res[content-length]- :response-time ms :post-data'))
 
 let persons = [
     { 
